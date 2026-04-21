@@ -230,6 +230,8 @@ enum nrf_wifi_sys_commands {
 	NRF_WIFI_CMD_UPDATE_XO,
 	/** Command to configure LMAC tuning parameters */
 	NRF_WIFI_CMD_LMAC_TUNING_PARAMS,
+	/** Radio test: push full @ref rpu_conf_params (MAC/PHY update) to LMAC/PHY */
+	NRF_WIFI_CMD_MAC_PARAM_UPDATE,
 };
 
 /**
@@ -806,6 +808,8 @@ struct rpu_conf_params {
 	unsigned int rf_params_addr[NUM_WIFI_PARAMS];
 	/** VTF buffer address */
 	unsigned int vtf_buffer_addr;
+	/** BSS check in RX filter: 0=disable, 1=enable */
+	unsigned char bss_check_enable;
 } __NRF_WIFI_PKD;
 
 /**
@@ -872,6 +876,16 @@ struct nrf_wifi_cmd_rx {
 	struct nrf_wifi_sys_head sys_head;
 	/** rx configuration parameters @ref rpu_conf_rx_radio_test_params */
 	struct rpu_conf_rx_radio_test_params conf;
+} __NRF_WIFI_PKD;
+
+/**
+ * @brief Radio-test command: full @ref rpu_conf_params for MAC/PHY update (LMAC_CMD_CONFIG_MAC_PARAMS).
+ */
+struct nrf_wifi_cmd_mac_param_update {
+	/** UMAC header, @ref nrf_wifi_sys_head */
+	struct nrf_wifi_sys_head sys_head;
+	/** Full radio-test configuration @ref rpu_conf_params */
+	struct rpu_conf_params conf;
 } __NRF_WIFI_PKD;
 
 /**
