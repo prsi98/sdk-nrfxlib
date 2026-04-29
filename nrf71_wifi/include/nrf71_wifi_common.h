@@ -618,6 +618,14 @@ struct nrf_wifi_cmd_sys_init {
 	 *  11AC implies 11N; 11AX implies 11AC+11N.
 	 */
 	unsigned int protocol_mode;
+	/** Display scan behaviour once @ref display_scan_bss_limit slots are filled
+        *  (and host scan DB size / fallback caps apply in the UMAC).
+        *  0 (default): keep scanning; a strictly stronger RSSI than the weakest stored
+        *               BSS replaces that weakest entry (list stays signal-ranked).
+        *  1: at capacity, further qualifying beacons/probes trigger scan abort to the
+        *     lower layer and scan completion to the upper layer; no RSSI replacement.
+        */
+	unsigned char display_scan_abort_on_bss_limit;
 } __NRF_WIFI_PKD;
 
 /**
