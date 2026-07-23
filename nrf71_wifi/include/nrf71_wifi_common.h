@@ -1737,14 +1737,13 @@ enum wifi_operation_modes {
  * @brief RF test commands for the Wi-Fi RPU (radio test mode).
  *
  * Supports RX ADC capture, RX packet capture (static and dynamic), TX tone
- * generation, and XO calibration/tune.
+ * generation, and XO tune.
  */
 enum nrf_wifi_rf_test {
 	NRF_WIFI_RF_TEST_RX_ADC_CAP,
 	NRF_WIFI_RF_TEST_RX_STAT_PKT_CAP,
 	NRF_WIFI_RF_TEST_RX_DYN_PKT_CAP,
 	NRF_WIFI_RF_TEST_TX_TONE,
-	NRF_WIFI_RF_TEST_XO_CALIB,
 	NRF_WIFI_RF_TEST_XO_TUNE,
 	NRF_WIFI_RF_TEST_MAX,
 };
@@ -1758,7 +1757,6 @@ enum nrf_wifi_rf_test_event {
 	NRF_WIFI_RF_TEST_EVENT_RX_STAT_PKT_CAP,
 	NRF_WIFI_RF_TEST_EVENT_RX_DYN_PKT_CAP,
 	NRF_WIFI_RF_TEST_EVENT_TX_TONE_START,
-	NRF_WIFI_RF_TEST_EVENT_XO_CALIB,
 	NRF_WIFI_RF_TEST_EVENT_XO_TUNE,
 	NRF_WIFI_RF_TEST_EVENT_MAX,
 };
@@ -1839,13 +1837,6 @@ struct nrf_wifi_rf_test_tx_params {
 	unsigned char tone_type;
 } __NRF_WIFI_PKD;
 
-struct nrf_wifi_rf_test_xo_calib {
-	unsigned char test;
-
-	signed char xo_val;
-
-} __NRF_WIFI_PKD;
-
 struct nrf_wifi_rf_get_xo_value {
 	unsigned char test;
 
@@ -1856,13 +1847,6 @@ struct nrf_wifi_rf_get_xo_value {
 	 * 3 = gain fail (low), 4 = gain fail (timeout)
 	 */
 	unsigned char status;
-} __NRF_WIFI_PKD;
-
-/** Voltage / temperature / X0 frequency for PHY init (shared HPQM buffer). */
-struct nrf_wifi_vtf_params {
-	unsigned int voltage;
-	unsigned int temp;
-	unsigned int x0_freq;
 } __NRF_WIFI_PKD;
 
 /* TODO: Below OTP + PCB loss won't work for nRF71, but added
@@ -2647,6 +2631,12 @@ struct lmac_tuning_params {
     unsigned int clock_mode;
 	/* reserved for patching */
 	unsigned int reserved[16];
+} __NRF_WIFI_PKD;
+
+struct nrf_wifi_vtf_params {
+	unsigned int voltage;
+	unsigned int temp;
+	unsigned int x0_freq;
 } __NRF_WIFI_PKD;
 
 struct nrf_wifi_cmd_lmac_tuning_params {

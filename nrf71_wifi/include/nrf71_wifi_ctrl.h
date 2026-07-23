@@ -2747,6 +2747,10 @@ struct nrf_wifi_umac_event_new_scan_results {
 
 #define NRF_WIFI_MFP_REQUIRED (1 << 0)
 #define NRF_WIFI_MFP_CAPABLE  (1 << 1)
+
+#define NRF_WIFI_RANGING_TB (1 << 0)
+#define NRF_WIFI_RANGING_NON_TB (1 << 1)
+#define NRF_WIFI_RANGING_SECURITY (1 << 2)
 /**
  * @brief This structure represents the response for NRF_WIFI_UMAC_CMD_GET_SCAN_RESULTS.
  *  It contains the displayed scan result.
@@ -2781,6 +2785,14 @@ struct umac_display_results {
 	unsigned char reserved3;
 	/** reserved */
 	unsigned char reserved4;
+	/** PASN enable/disable */
+	unsigned int pasn_support;
+	/** FTM enable/disable */
+	unsigned char ftm_support;
+	/** Ranging enable/disable */
+	unsigned char ranging_support;
+	/** Sensing enable/disable */
+	unsigned char sensing_support;
 } __NRF_WIFI_PKD;
 
 #define DISPLAY_BSS_TOHOST_PEREVNT 8
@@ -3839,7 +3851,7 @@ struct nrf_wifi_tx_buff {
 	/** Number of packets sending in this command */
 	unsigned char num_tx_pkts;
 	/** Each packets information @ref nrf_wifi_tx_buff_info */
-	struct nrf_wifi_tx_buff_info tx_buff_info[0];
+	struct nrf_wifi_tx_buff_info tx_buff_info[];
 } __NRF_WIFI_PKD;
 
 #define NRF_WIFI_TX_STATUS_SUCCESS 0
@@ -3922,7 +3934,7 @@ struct nrf_wifi_rx_buff {
 	/** signal strength */
 	signed short signal;
 	/** Information of each packet. @ref nrf_wifi_rx_buff_info */
-	struct nrf_wifi_rx_buff_info rx_buff_info[0];
+	struct nrf_wifi_rx_buff_info rx_buff_info[];
 } __NRF_WIFI_PKD;
 
 /**
