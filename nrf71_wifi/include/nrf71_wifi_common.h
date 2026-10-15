@@ -695,6 +695,14 @@ struct nrf_wifi_cmd_mode {
 	signed int mode;
 
 } __NRF_WIFI_PKD;
+
+/**
+ * @brief RF operating mode applied at radio-test channel setup.
+ */
+typedef enum {
+	rx_only_mode,
+	trx_normal_mode
+} sys_oper_mode_e;
 /**
  * @brief This structure describes different Physical Layer (PHY) configuration parameters used
  *  in RF test and Radio test scenarios. These parameters are specific to testing and evaluating
@@ -820,6 +828,8 @@ struct rpu_conf_params {
 	unsigned int vtf_buffer_addr;
 	/** BSS check in RX filter: 0=disable, 1=enable */
 	unsigned char bss_check_enable;
+	/** Power mode for channel setup (@ref sys_oper_mode_e). Default: trx_normal_mode. */
+	unsigned char power_mode;
 } __NRF_WIFI_PKD;
 
 /**
@@ -862,6 +872,8 @@ struct nrf_wifi_radio_test_init_info {
 	unsigned char rx_bss_color;
 	/** Receive station ID value (1 to 2047) */
 	unsigned short rx_station_id;
+	/** Power mode for channel setup (@ref sys_oper_mode_e). Default: trx_normal_mode. */
+	unsigned char power_mode;
 } __NRF_WIFI_PKD;
 
 /**
@@ -1743,6 +1755,7 @@ enum nrf_wifi_rf_test {
 	NRF_WIFI_RF_TEST_RX_ADC_CAP,
 	NRF_WIFI_RF_TEST_RX_STAT_PKT_CAP,
 	NRF_WIFI_RF_TEST_RX_DYN_PKT_CAP,
+	NRF_WIFI_RF_TEST_RX_EXT_EVENT_CAP,
 	NRF_WIFI_RF_TEST_TX_TONE,
 	NRF_WIFI_RF_TEST_XO_TUNE,
 	NRF_WIFI_RF_TEST_MAX,
@@ -1756,6 +1769,7 @@ enum nrf_wifi_rf_test_event {
 	NRF_WIFI_RF_TEST_EVENT_RX_ADC_CAP,
 	NRF_WIFI_RF_TEST_EVENT_RX_STAT_PKT_CAP,
 	NRF_WIFI_RF_TEST_EVENT_RX_DYN_PKT_CAP,
+	NRF_WIFI_RF_TEST_EVENT_RX_EXT_EVENT_CAP,
 	NRF_WIFI_RF_TEST_EVENT_TX_TONE_START,
 	NRF_WIFI_RF_TEST_EVENT_XO_TUNE,
 	NRF_WIFI_RF_TEST_EVENT_MAX,
@@ -1771,7 +1785,7 @@ struct nrf_wifi_rf_test_capture_params {
 	unsigned char test;
 
 	/* Number of samples to be captured. */
-	unsigned short int cap_len;
+	unsigned int cap_len;
 
 	/* Capture timeout in seconds. */
 	unsigned short int cap_time;
@@ -1803,6 +1817,7 @@ struct nrf_wifi_rf_test_capture_params {
 
 	/* address of the capture data */
 	unsigned int *capture_addr;
+    unsigned int *cap_buf_end_addr;
 } __NRF_WIFI_PKD;
 
 /** Tone type for RF test TX tone: 0 = complex, 1 = real-only, 2 = imag-only. */
