@@ -120,6 +120,7 @@ struct umac_rx_dbg_params {
 	unsigned int rx_packet_mpdu_cnt;
 	unsigned int rx_err_secondary_pkt;
 	unsigned int rx_err_invalid_pkt_info_type;
+	unsigned int rx_he_tb_frame_cnt;
 } __NRF_WIFI_PKD;
 
 /**
@@ -201,6 +202,7 @@ struct umac_tx_dbg_params {
 	unsigned int tx_packet_non_mgmt_data_count;
 	/** Number of EAPOL packets sent */
 	unsigned int tx_packet_eapol_count;
+	unsigned int tx_he_tb_frame_cnt;
 } __NRF_WIFI_PKD;
 
 /**
@@ -301,6 +303,7 @@ struct umac_cmd_evnt_dbg_params {
 	unsigned int LMAC_CMD_PS;
 	/** Current power save state configured to LMAC through LMAC_CMD_PS command */
 	unsigned int CURR_STATE;
+	unsigned int last_disconnect_site;
 } __NRF_WIFI_PKD;
 
 /**
@@ -812,6 +815,8 @@ struct ftm_debug_stats {
 	unsigned int ftm_inv_req_cnt;
 	unsigned int lci_buffer_overflow;
 	unsigned int civic_buffer_overflow;
+	unsigned int ftm_mac_addr_override_cnt;
+	unsigned int ftm_mac_addr_restore_cnt;
 };
 
 struct lp_rx_stats {
@@ -1185,7 +1190,7 @@ struct nrf_wifi_rf_get_rx_debug_stats {
 struct phy_debug_stats {
 	unsigned int stats_category;
 	union {
-		unsigned int phy_stats[64];
+		unsigned int phy_stats[84];
 	};
 } __NRF_WIFI_PKD;
 

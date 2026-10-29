@@ -155,7 +155,9 @@ enum nrf_wifi_umac_commands {
 	NRF_WIFI_UMAC_CMD_CONFIG_NEIGHBOR_REQ,
 
 	/** Command to set sqi threshold */
-	NRF_WIFI_UMAC_CMD_SQI_SET_THRESHOLD
+	NRF_WIFI_UMAC_CMD_SQI_SET_THRESHOLD,
+	NRF_WIFI_UMAC_CMD_FTM_RESPONDER_CONFIG,
+	NRF_WIFI_UMAC_CMD_MEAS_ABORT
 };
 
 /**
@@ -619,7 +621,7 @@ struct nrf_wifi_sae {
 	unsigned char sae_data[NRF_WIFI_MAX_SAE_DATA_LENGTH];
 } __NRF_WIFI_PKD;
 
-#define NRF_WIFI_MAX_FRAME_LEN 600
+#define NRF_WIFI_MAX_FRAME_LEN 800
 
 /**
  * @brief This structure defines the frame that is intended for transmission.
@@ -2782,17 +2784,17 @@ struct umac_display_results {
 	unsigned char mfp_flag;
 	unsigned char msmr_capabilities;
 	/** reserved */
-	unsigned char reserved3;
 	/** reserved */
-	unsigned char reserved4;
 	/** PASN enable/disable */
-	unsigned int pasn_support;
+	unsigned char pasn_support;
 	/** FTM enable/disable */
 	unsigned char ftm_support;
 	/** Ranging enable/disable */
 	unsigned char ranging_support;
 	/** Sensing enable/disable */
 	unsigned char sensing_support;
+	unsigned char reserved3;
+	unsigned char reserved4;
 } __NRF_WIFI_PKD;
 
 #define DISPLAY_BSS_TOHOST_PEREVNT 8
@@ -3872,6 +3874,7 @@ struct nrf_wifi_tx_buff_done {
 	unsigned char timestamp_t1[6];
 	/** Frame ack received time at Phy */
 	unsigned char timestamp_t4[6];
+	unsigned int tx_rate_kbps;
 	/** Status of Tx packet. Maximum of MAX_TX_AGG_SIZE */
 	unsigned char tx_status_code[0];
 } __NRF_WIFI_PKD;
@@ -4198,6 +4201,44 @@ enum nrf_wifi_peer_meas_ftm_failure_reasons {
 	/** Bad changed parameters */
 	NRF_WIFI_FTM_FAILURE_BAD_CHANGED_PARAMS,
 } __NRF_WIFI_PKD;
+enum NRF_WIFI_FTM_EVENT_BITMAP_INDEX {
+    NRF_WIFI_FTM_EVENT_BITMAP_INDEX_RTT = 0,
+    /* Bit index: Distance (derived from RTT) value is present */
+    NRF_WIFI_FTM_EVENT_BITMAP_INDEX_DIST,
+    /* Bit index: RTT spread (max-min variation across samples) is present */
+    NRF_WIFI_FTM_EVENT_BITMAP_INDEX_RTT_SPREAD,
+    /* Bit index: RTT variance (statistical spread) is present */
+    NRF_WIFI_FTM_EVENT_BITMAP_INDEX_RTT_VARIANCE,
+    /* Bit index: Aggregated/averaged RTT across multiple bursts is present */
+    NRF_WIFI_FTM_EVENT_BITMAP_INDEX_MULTI_BURST_RTT,
+    /* Bit index: Number of bursts used in multi-burst measurement is present */
+    NRF_WIFI_FTM_EVENT_BITMAP_INDEX_MULTI_BURST_COUNT,
+    /* Bit index: Current burst index (sequence number) is present */
+    NRF_WIFI_FTM_EVENT_BITMAP_INDEX_BURST_INDEX,
+    /* Bit index: Total number of bursts configured/expected is present */
+    NRF_WIFI_FTM_EVENT_BITMAP_INDEX_TOTAL_BURST,
+    /* Bit index: Number of successful FTM frames/measurements in current burst is present */
+    NRF_WIFI_FTM_EVENT_BITMAP_INDEX_COUNT,
+    /* Bit index: Total number of FTM frames/measurements across all bursts is present */
+    NRF_WIFI_FTM_EVENT_BITMAP_INDEX_TOTAL_COUNT,
+    /* Bit index: Generic/raw measurement value field is present */
+    NRF_WIFI_FTM_EVENT_BITMAP_INDEX_VALUE,
+    /* Bit index: Delay value used for non-ASAP (scheduled) FTM sessions is present */
+    NRF_WIFI_FTM_EVENT_BITMAP_INDEX_NON_ASAP_DELAY,
+    /* Bit index: Burst period (time between bursts) is present */
+    NRF_WIFI_FTM_EVENT_BITMAP_INDEX_BURST_PERIOD,
+    /* Bit index: Local interface MAC address is present */
+    NRF_WIFI_FTM_EVENT_BITMAP_INDEX_IF_MAC_ADDR,
+    /* Bit index: Peer (responder) MAC address is present */
+    NRF_WIFI_FTM_EVENT_BITMAP_INDEX_PEER_MAC_ADDR,
+    /* Bit index: Timestamp of the FTM measurement/event is present */
+    NRF_WIFI_FTM_EVENT_BITMAP_INDEX_FTM_TIMESTAMP,
+    /* Bit index: LCI (Location Configuration Information) data is present */
+    NRF_WIFI_FTM_EVENT_BITMAP_INDEX_LCI_DATA,
+    /* Bit index: Civic location data is present */
+    NRF_WIFI_FTM_EVENT_BITMAP_INDEX_CIVIC_DATA,
+} __NRF_WIFI_PKD;
+
 #define NRF_WIFI_EVENT_RESULT_RSSI_VALID (1 << 0)
 #define NRF_WIFI_EVENT_RESULT_RSSI_SPREAD_VALID (1 << 1)
 #define NRF_WIFI_EVENT_RESULT_RTT_VALID (1 << 2)
@@ -4246,6 +4287,7 @@ struct nrf_wifi_umac_ftm_result {
 	signed long long dist_variance;
 	/** distance spread measured */
 	signed long long dist_spread;
+	unsigned int valid_bitmap;
 } __NRF_WIFI_PKD;
 
 /*
@@ -4290,7 +4332,7 @@ struct nrf_wifi_umac_meas_result_info {
 	struct nrf_wifi_umac_ftm_result ftm;
 } __NRF_WIFI_PKD;
 
-#define NRF_WIFI_MAX_PMSR_PEERS 8
+#define NRF_WIFI_MAX_PMSR_PEERS 4
 /*
  * @brief This structure defines a event used to send FTM measurements results
  * with peers using the NRF_WIFI_UMAC_EVENT_PEER_MEAS_RESULTS.
