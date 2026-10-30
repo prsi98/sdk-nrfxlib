@@ -407,6 +407,7 @@ struct umac_sleep_stats {
 	unsigned int pending_cmd_resubmit;
 	unsigned int umac_goto_sleep;
 	unsigned int max_twt_awake_cnt;
+	unsigned int last_sleep_req_status;
 };
 /**
  * @brief This structure specifies the UMAC SoftAP debug parameters used for debugging purpose.

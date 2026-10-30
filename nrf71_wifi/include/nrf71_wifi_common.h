@@ -1782,11 +1782,11 @@ enum nrf_wifi_rf_test {
 	NRF_WIFI_RF_TEST_RX_ADC_CAP,
 	NRF_WIFI_RF_TEST_RX_STAT_PKT_CAP,
 	NRF_WIFI_RF_TEST_RX_DYN_PKT_CAP,
-	NRF_WIFI_RF_TEST_RX_AGC_ENB_CAP,
-	NRF_WIFI_RF_TEST_RX_EXT_EVENT_CAP,
 	NRF_WIFI_RF_TEST_TX_TONE,
 	NRF_WIFI_RF_TEST_XO_TUNE,
-	NRF_WIFI_RF_TEST_MAX,
+	NRF_WIFI_RF_TEST_RX_AGC_ENB_CAP,
+	NRF_WIFI_RF_TEST_RX_EXT_EVENT_CAP,
+	NRF_WIFI_RF_TEST_MAX
 };
 
 /**
@@ -1797,11 +1797,11 @@ enum nrf_wifi_rf_test_event {
 	NRF_WIFI_RF_TEST_EVENT_RX_ADC_CAP,
 	NRF_WIFI_RF_TEST_EVENT_RX_STAT_PKT_CAP,
 	NRF_WIFI_RF_TEST_EVENT_RX_DYN_PKT_CAP,
-	NRF_WIFI_RF_TEST_EVENT_RX_AGC_ENB_CAP,
-	NRF_WIFI_RF_TEST_EVENT_RX_EXT_EVENT_CAP,
 	NRF_WIFI_RF_TEST_EVENT_TX_TONE_START,
 	NRF_WIFI_RF_TEST_EVENT_XO_TUNE,
-	NRF_WIFI_RF_TEST_EVENT_MAX,
+	NRF_WIFI_RF_TEST_EVENT_RX_AGC_ENB_CAP,
+	NRF_WIFI_RF_TEST_EVENT_RX_EXT_EVENT_CAP,
+	NRF_WIFI_RF_TEST_EVENT_MAX
 };
 
 #define NRF_WIFI_RF_TEST_RX_CAPTURE_MAX_SAMPLES 12256
@@ -2274,6 +2274,7 @@ struct nrf_wifi_cmd_sqi {
 	unsigned int nrf_wifi_avg_cnt;
 } __NRF_WIFI_PKD;
 
+#define FTM_MUSIC_NUM_PARAMS 4
 struct lmac_tuning_params {
 	unsigned int ofdm_sifs_value;
 	unsigned int dsss_sifs_value;
@@ -2320,6 +2321,11 @@ struct lmac_tuning_params {
 	int toa_offset;
 	unsigned int clock_mode;
 	unsigned int clear_int_ext_clk_req;
+	int ftm_music_param[FTM_MUSIC_NUM_PARAMS];
+	unsigned int lp_rx_bcast_enable;
+	unsigned int lp_rx_max_dsss_rate;
+	unsigned int lp_rx_max_ofdm_rate;
+	unsigned int lp_rx_max_mcs;
 	/* reserved for patching */
 	unsigned int reserved[16];
 } __NRF_WIFI_PKD;
